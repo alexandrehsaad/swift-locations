@@ -51,8 +51,14 @@ extension LocationManagerDelegate: CLLocationManagerDelegate {
 	}
 	
 	func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-		let status: AuthorizationStatus = CLLocationManager.authorizationStatus().clone
-		self.authorizationContinuation?.resume(returning: status)
+		let status: CLAuthorizationStatus
+		
+		if #available(iOS 14, macOS 11, watchOS 7, *) {
+			status = manager.authorizationStatus
+		} else {
+			status = CLLocationManager.authorizationStatus()
+		}
+		self.authorizationContinuation?.resume(returning: status.clone)
 	}
 }
 

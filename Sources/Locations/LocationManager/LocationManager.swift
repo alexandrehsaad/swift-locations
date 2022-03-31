@@ -55,22 +55,10 @@ public final class LocationManager {
 	
 	///
 	public var authorizationStatus: AuthorizationStatus {
-		// if #available(iOS 14, *) || #available(macOS: 11, *) || #available(watchOS 7, *) {
-		let status: CLAuthorizationStatus = CLLocationManager.authorizationStatus()
-		
-		switch status {
-		case .notDetermined:
-			return .undetermined
-		case .restricted:
-			return .restricted
-		case .denied:
-			return .denied
-		case .authorizedWhenInUse:
-			return .authorizedWhenInUse
-		case .authorizedAlways:
-			return .authorizedAlways
-		@unknown default:
-			fatalError()
+		if #available(iOS 14, macOS 11, watchOS 7, *) {
+			return self.locationManager.authorizationStatus.clone
+		} else {
+			return CLLocationManager.authorizationStatus().clone
 		}
 	}
 	
@@ -87,7 +75,6 @@ public final class LocationManager {
 		return await withCheckedContinuation { (continuation) in
 			guard self.isRecordingAuthorized == false else {
 				continuation.resume(returning: self.authorizationStatus)
-//				throw
 				return
 			}
 			
@@ -104,7 +91,6 @@ public final class LocationManager {
 		return await withCheckedContinuation { (continuation) in
 			guard self.isRecordingAuthorized == false else {
 				continuation.resume(returning: self.authorizationStatus)
-//				throw
 				return
 			}
 			

@@ -3,14 +3,14 @@
 import PackageDescription
 
 let package = Package(
-	name: "swift-location",
+	name: "swift-locations",
 	defaultLocalization: "en",
 	products: [
-		.library(name: "Location", targets: ["Location"])
+		.library(name: "Locations", targets: ["Locations"])
 	], dependencies: [
 		.package(url: "https://github.com/alexandrehsaad/swift-extensions", branch: "main")
 	], targets: [
-		.target(name: "Location", dependencies: [
+		.target(name: "Locations", dependencies: [
 			.product(name: "Extensions", package: "swift-extensions"),
 		]),
 	], swiftLanguageVersions: [.v5]

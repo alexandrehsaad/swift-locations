@@ -24,10 +24,10 @@ public enum AuthorizationStatus {
 	/// A boolean value indicating whether access is authorized by the user.
 	public var isAuthorized: Bool {
 		switch self {
-		case .undetermined, .restricted, .denied:
-			return false
 		case .authorizedWhenInUse, .authorizedAlways:
 			return true
+		default:
+			return false
 		}
 	}
 }

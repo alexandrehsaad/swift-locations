@@ -1,6 +1,6 @@
 # swift-locations
 
-A wrapper of the CoreLocation framework replacing the delegate pattern with Swift concurrency.
+A wrapper on the CoreLocation framework replacing the delegate pattern with Swift concurrency.
 
 ## Installation
 

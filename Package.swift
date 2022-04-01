@@ -6,10 +6,10 @@ let package = Package(
 	name: "swift-locations",
 	defaultLocalization: "en",
 	platforms: [
-		.iOS(.v9),
-		.macCatalyst(.v13),
-		.macOS(.v11),
-		.watchOS(.v2)
+		.iOS(.v13),
+		.macCatalyst(.v15),
+		.macOS(.v10_15),
+		.watchOS(.v6)
 	],
 	products: [
 		.library(name: "Locations", targets: ["Locations"])

@@ -2,62 +2,35 @@
 // Locations
 //
 // Copyright © 2022 Alexandre H. Saad
+// Licensed under Apache License v2.0 with Runtime Library Exception
 //
 
 #if canImport(CoreLocation)
 
 import CoreLocation
 
-///
-@available(iOS 13, macOS 10.5, watchOS 6, *)
+@available(iOS 13, macCatalyst 15, macOS 10.5, watchOS 6, *)
 final class LocationManagerDelegate: NSObject {
+	var authorizationContinuation: CheckedContinuation<AuthorizationStatus, Never>? = nil
 	
-	// MARK: -
-	
-	///
-	typealias AuthorizationContinuation = CheckedContinuation<AuthorizationStatus, Never>
-	
-	///
-	typealias LocationContinuation = CheckedContinuation<[CLLocation], Error>
-	
-	// MARK: -
-	
-	///
-	override init() {
-		super.init()
+	var locatorUpdates: ([CLLocation]?, Error?) -> Void = { (_,_) in
+		return
 	}
-	
-	// MARK: -
-	
-	///
-	var authorizationContinuation: AuthorizationContinuation? = nil
-	
-	///
-	var locations: Array<CLLocation> = []
-	
-	///
-	var locationContinuation: LocationContinuation? = nil
 }
 
-@available(iOS 13, macOS 10.5, watchOS 6, *)
+@available(iOS 13, macCatalyst 15, macOS 10.5, watchOS 6, *)
 extension LocationManagerDelegate: CLLocationManagerDelegate {
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-//		self.locationContinuation?.resume(throwing: error)
+		self.locatorUpdates(nil, error)
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		self.locations = locations
-//		self.locationContinuation?.resume(returning: locations)
+		self.locatorUpdates(locations, nil)
 	}
 	
 	func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-		let status: CLAuthorizationStatus
+		let status: CLAuthorizationStatus = manager.authStatus
 		
-		if #available(iOS 14, macOS 11, watchOS 7, *) {
-			status = manager.authorizationStatus
-		} else {
-			status = CLLocationManager.authorizationStatus()
-		}
 		self.authorizationContinuation?.resume(returning: status.clone)
 	}
 }

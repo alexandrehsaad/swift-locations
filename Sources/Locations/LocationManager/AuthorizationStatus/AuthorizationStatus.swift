@@ -2,10 +2,12 @@
 // Locations
 //
 // Copyright © 2022 Alexandre H. Saad
+// Licensed under Apache License v2.0 with Runtime Library Exception
 //
 
-/// A representation of a location manager authorization status.
-public enum AuthorizationStatus {
+/// A representation of an authorization status.
+@frozen
+public enum AuthorizationStatus: Equatable {
 	/// The status has not yet been determined.
 	case undetermined
 	
@@ -15,45 +17,25 @@ public enum AuthorizationStatus {
 	/// Access is denied by the user.
 	case denied
 	
-	/// Access is authorized when in use by the user.
-	case authorizedWhenInUse
-	
 	/// Access is authorized by the user.
-	case authorizedAlways
+	case authorized(AuthorizedOptions)
 	
 	/// A boolean value indicating whether access is authorized by the user.
 	public var isAuthorized: Bool {
 		switch self {
-		case .authorizedWhenInUse, .authorizedAlways:
+		case .authorized:
 			return true
 		default:
 			return false
 		}
 	}
-}
-
-#if canImport(CoreLocation)
-
-import CoreLocation
-
-extension CLAuthorizationStatus {
-	///
-	internal var clone: AuthorizationStatus {
-		switch self {
-		case .notDetermined:
-			return .undetermined
-		case .restricted:
-			return .restricted
-		case .denied:
-			return .denied
-		case .authorizedWhenInUse:
-			return .authorizedWhenInUse
-		case .authorizedAlways:
-			return .authorizedAlways
-		@unknown default:
-			fatalError()
-		}
+	
+	/// A representation of an authorization status.
+	public enum AuthorizedOptions {
+		/// Access is authorized by the user while the app is in use.
+		case whenInUse
+		
+		/// Access is authorized by the user regardless of whether the app is in use.
+		case always
 	}
 }
-
-#endif

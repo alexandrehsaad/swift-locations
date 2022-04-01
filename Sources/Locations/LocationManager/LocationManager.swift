@@ -2,16 +2,21 @@
 // Locations
 //
 // Copyright © 2022 Alexandre H. Saad
+// Licensed under Apache License v2.0 with Runtime Library Exception
 //
 
 #if canImport(CoreLocation)
 
 import CoreLocation
 
-/// A reprensentation of the location manager.
-@MainActor
-@available(iOS 13, macOS 10.5, watchOS 6, *)
+/// A representation of the location manager.
+@available(iOS 13, macCatalyst 15, macOS 10.5, watchOS 6, *)
 public final class LocationManager {
+	/// The underlying location manager from Apple's CoreLocation framework.
+	private let locationManager: CLLocationManager = .init()
+	
+	/// The location manager delegate.
+	private let locationManagerDelegate: LocationManagerDelegate = .init()
 	
 	// MARK: - Creating Instances
 	
@@ -20,110 +25,140 @@ public final class LocationManager {
 		self.locationManager.delegate = self.locationManagerDelegate
 	}
 	
+	/// Creates a new instance with the desired location accuracy.
 	///
-	///
-	/// - parameter accuracy:
+	/// - parameter accuracy: The desired accuracy.
 	public convenience init(accuracy: LocationAccuracy) {
 		self.init()
 		self.locationManager.desiredAccuracy = accuracy.clone
 	}
 	
-	/// The underlying location manager from Apple's CoreLocation framework.
-	private let locationManager: CLLocationManager = .init()
+	deinit {
+		self.unsubscribeFromLocater()
+	}
 	
-	/// The location manager delegate.
-	private let locationManagerDelegate: LocationManagerDelegate = .init()
-	
-	/// The shared instance.
-	public static let shared: LocationManager = .init()
-	
-	// MARK: - Sensors Availabilities
+	// MARK: - Checking Availabilities
 	
 	/// A boolean value indicating whether the locater is available.
 	public var isLocaterAvailable: Bool {
 		return CLLocationManager.locationServicesEnabled()
 	}
 	
-	// MARK: - Sensors Activities
-	
-	/// A boolean value indicating whether the licalizer is active.
-	public var isLocaterActive: Bool {
-		return CLLocationManager.locationServicesEnabled()
-	}
-	
 	// MARK: - Requesting Authorizations
 	
-	///
+	/// The app’s authorization status for using location services.
 	public var authorizationStatus: AuthorizationStatus {
-		if #available(iOS 14, macOS 11, watchOS 7, *) {
-			return self.locationManager.authorizationStatus.clone
-		} else {
-			return CLLocationManager.authorizationStatus().clone
-		}
+		return self.locationManager.authStatus.clone
 	}
 	
-	/// A boolean value indicating whether the user has authorized to be recorded.
-	public var isRecordingAuthorized: Bool {
+	/// A boolean value indicating whether the user has authorized to share his location.
+	public var isAuthorizedToLocate: Bool {
 		return self.authorizationStatus.isAuthorized
 	}
 	
+	/// Requests the user’s permission to use location services while the app is in use.
 	///
-	///
-	/// - Returns:
+	/// - throws: An authorization not changeable error.
+	/// - returns: A discardable authorization status.
 	@discardableResult
-	public func requestWhenInUseAuthorization() async -> AuthorizationStatus {
+	public func requestWhenInUseAuthorization() async throws -> AuthorizationStatus {
+		guard self.authorizationStatus == .undetermined else {
+			throw ServiceError.notChangeable
+		}
+		
+		self.locationManager.requestWhenInUseAuthorization()
+		
 		return await withCheckedContinuation { (continuation) in
-			guard self.isRecordingAuthorized == false else {
-				continuation.resume(returning: self.authorizationStatus)
-				return
-			}
-			
-			self.locationManager.requestWhenInUseAuthorization()
 			self.locationManagerDelegate.authorizationContinuation = continuation
+			
+			if self.isAuthorizedToLocate {
+				print("Location services were authorized.")
+			}
 		}
 	}
 	
+	/// Requests the user’s permission to use location services regardless of whether the app is in use.
 	///
-	///
-	/// - Returns:
+	/// - throws: An authorization not changeable error.
+	/// - returns: A discardable authorization status.
 	@discardableResult
-	public func requestAlwaysAuthorization() async -> AuthorizationStatus {
+	public func requestAlwaysAuthorization() async throws -> AuthorizationStatus {
+		guard self.authorizationStatus == .undetermined else {
+			throw ServiceError.notChangeable
+		}
+		
+		self.locationManager.requestAlwaysAuthorization()
+		
 		return await withCheckedContinuation { (continuation) in
-			guard self.isRecordingAuthorized == false else {
-				continuation.resume(returning: self.authorizationStatus)
-				return
-			}
-			
-			self.locationManager.requestAlwaysAuthorization()
 			self.locationManagerDelegate.authorizationContinuation = continuation
+			
+			if self.isAuthorizedToLocate {
+				print("Location services were authorized.")
+			}
 		}
 	}
 	
-	// MARK: - Subscribing to Sensors
+	// MARK: - Subscribing to Streams
+	
+	/// A boolean value indicating whether the locater is active.
+	@available(*, unavailable)
+	public var isLocaterActive: Bool {
+		fatalError()
+	}
 	
 	/// Subscribes to the locater.
 	///
-	/// - Returns: An asynchronous stream of data from the locater.
-	/// - Throws: A location reader error.
+	/// - throws: A service not available error.
+	/// - throws: A service not authorized error.
+	/// - returns: An asynchronous stream of data from the locater.
 	public func subscribeToLocater() throws -> AsyncStream<CLLocation> {
-//		guard self.isLocaterAvailable else {
-//			throw
-//		}
+		guard self.isLocaterAvailable else {
+			throw ServiceError.notAvailable
+		}
+		
+		guard self.isAuthorizedToLocate else {
+			throw ServiceError.notAuthorized
+		}
 		
 		return AsyncStream { (continuation) in
+			self.locationManagerDelegate.locatorUpdates = { (data, error) in
+				// FIXME: better handle errors from the callback
+				if let error = error {
+					print(error.localizedDescription)
+					continuation.finish()
+					return
+				}
+				
+				guard let locations: [CLLocation] = data else {
+					continuation.finish()
+					return
+				}
+				
+				for location in locations {
+					continuation.yield(location)
+				}
+			}
+			
 			self.locationManager.startUpdatingLocation()
 			
-			for location in self.locationManagerDelegate.locations {
-				continuation.yield(location)
+			continuation.onTermination = { @Sendable (termination) in
+				switch termination {
+				case .cancelled:
+					print("Locater stream was cancelled.")
+				case .finished:
+					print("Locater stream was finished.")
+				@unknown default:
+					fatalError()
+				}
+				
+				self.locationManager.stopUpdatingLocation()
 			}
 		}
 	}
 	
-	// MARK: - Unsubscribing from Sensors
+	// MARK: - Unsubscribing from Streams
 	
 	/// Unsubscribes from the locater.
-	///
-	/// - Throws: A location reader error.
 	public func unsubscribeFromLocater() {
 		self.locationManager.stopUpdatingLocation()
 	}

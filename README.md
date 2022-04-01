@@ -72,7 +72,7 @@ do {
 }
 ```
 
-7. Unsubscribe from the sensor.
+7. Unsubscribe from the locater.
 
 ```swift
 manager.unsubscribeFromLocater()

@@ -7,7 +7,7 @@ A wrapper on the CoreLocation framework replacing the delegate pattern with Swif
 1. Add the package to the dependencies in your `Package.swift` file.
 
 ```swift
-let package = Package(
+let package: Package = .init(
     ...
     dependencies: [
         .package(url: "https://github.com/alexandrehsaad/swift-locations.git", branch: "main")
@@ -19,7 +19,7 @@ let package = Package(
 2. Add the package as a dependency on your target in your `Package.swift` file.
 
 ```swift
-let package = Package(
+let package: Package = .init(
     ...
     targets: [
         .target(name: "MyTarget", dependencies: [

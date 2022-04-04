@@ -2,6 +2,14 @@
 
 A wrapper on the CoreLocation framework replacing the delegate pattern with Swift concurrency.
 
+## Availability
+
+- iOS 13.0+
+- iPadOS 4.0+
+- macCatalyst 15.0+
+- macOS 10.15+
+- watchOS 6.0+
+
 ## Installation
 
 1. Add the package to the dependencies in your `Package.swift` file.
@@ -88,18 +96,26 @@ You can use this framework to track large or small changes in the user's current
 
 ## Contribution
 
+Contributions are what makes the open source community such an amazing place to learn, inspire, and create. If you wish to contribute and be part of this project, please fork the repository and create a [pull request](https://github.com/alexandrehsaad/swift-locations/pulls).
+
+1. Fork the repository
+2. Create your feature branch `git checkout -b NewFeature`
+3. Commit your changes `git commit -m 'Added a new feature'`
+4. Push to the branch `git push origin NewFeature`
+5. Open a pull request
+
 ### Reporting a bug
 
-If you find a bug, please create an issue.
+If you find a bug, please create an [issue](https://github.com/alexandrehsaad/swift-locations/issues).
 
 ### Contacting the maintainers
 
-The current code owner of this repository is Alexandre H. Saad ([@alexandrehsaad](https://github.com/alexandrehsaad)). You can contact him by writing an email to alexandresaad at icloud dot com.
+The current code owner of this repository is Alex ([@alexandrehsaad](https://github.com/alexandrehsaad)). If you want to share your thoughts or feedback on how to improve this repository, you can contact him by writing an email to alexandresaad at icloud dot com.
 
-## Support
+### Supporting this repository
 
-If you like my work, show your support by staring this repository.
- 
-## Feedback
+If this repository has been useful to you in some way, show your support by starring it.
 
-I would love to hear your thoughts or feedback on how Swift Locations could be improved!
+## License
+
+Distributed under Apache License v2.0 with Runtime Library Exception. See the `LICENSE.txt` file for more information.

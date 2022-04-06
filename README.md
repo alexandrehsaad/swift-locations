@@ -1,3 +1,5 @@
+![](Assets/GitHubBanner.png)
+
 # swift-locations
 
 A wrapper on the CoreLocation framework replacing the delegate pattern with Swift concurrency.

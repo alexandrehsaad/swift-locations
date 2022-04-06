@@ -4,15 +4,21 @@
 
 A wrapper on the CoreLocation framework replacing the delegate pattern with Swift concurrency.
 
+## Overview
+
+CoreLocation reports a device's location, altitude and orientation from on-device components.
+
 ## Availability
 
 - iOS 13.0+
-- iPadOS 4.0+
+- iPadOS 13.0+
 - macCatalyst 15.0+
 - macOS 10.15+
 - watchOS 6.0+
 
 ## Installation
+
+The Swift Package Manager is a tool for managing the distribution of Swift code and is integrated into the swift compiler.
 
 1. Add the package to the dependencies in your `Package.swift` file.
 
@@ -40,21 +46,21 @@ let package: Package = .init(
 )
 ```
 
-3. Import the package in your source code.
+## Demonstration
+
+1. Import the package in your source code.
 
 ```swift
 import Locations
 ```
 
-## Demonstration
-
-4. Initiate the manager with your desired accuracy.
+2. Initiate the manager with your desired accuracy.
 
 ```swift
 let manager: LocationManager = .init(accuracy: .tenMetres)
 ```
 
-5. Request the user’s permission to use location services and do something with the asynchronous value you receive. You can not show to the user an authorization dialog twice, but you can show the steps to change the permission from Settings.
+3. Request the user’s permission to use location services and do something with the asynchronous value you receive. You can not show to the user an authorization dialog twice, but you can show the steps to change the permission from Settings.
 
 ```swift
 do {
@@ -67,7 +73,7 @@ do {
 }
 ```
 
-6. Subscribe to the locater and do something with the asynchronous stream of values you receive. The return type is `CLLocation` from the CoreLocation framework.
+4. Subscribe to the locater and do something with the asynchronous stream of values you receive. The return type is `CLLocation` from the CoreLocation framework.
 
 ```swift
 do {
@@ -82,7 +88,7 @@ do {
 }
 ```
 
-7. Unsubscribe from the locater.
+5. Unsubscribe from the locater.
 
 ```swift
 manager.unsubscribeFromLocater()
@@ -103,7 +109,7 @@ Contributions are what makes the open source community such an amazing place to 
 1. Fork the repository
 2. Create your feature branch `git checkout -b NewFeature`
 3. Commit your changes `git commit -m 'Added a new feature'`
-4. Push to the branch `git push origin NewFeature`
+4. Push to your branch `git push origin NewFeature`
 5. Open a pull request
 
 ### Reporting a bug

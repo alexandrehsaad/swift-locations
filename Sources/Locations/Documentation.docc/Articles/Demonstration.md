@@ -10,19 +10,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 The Swift Package Manager is a tool for managing the distribution of Swift code and is integrated into the swift compiler.
 
-1. Import the package in your source code.
-
-	```swift
-	import Locations
-	```
-
-2. Initiate the manager with your desired accuracy.
+1. Initiate the manager with your desired accuracy.
 
 	```swift
 	let manager: LocationManager = .init(accuracy: .tenMetres)
 	```
 
-3. Request the user’s permission to use location services and do something with the asynchronous value you receive. You can not show to the user an authorization dialog twice, but you can show the steps to change the permission from Settings.
+2. Request the user’s permission to use location services and do something with the asynchronous value you receive. You can not show to the user an authorization dialog twice, but you can show the steps to change the permission from Settings.
 
 	```swift
 	do {
@@ -35,7 +29,7 @@ The Swift Package Manager is a tool for managing the distribution of Swift code 
 	}
 	```
 
-4. Subscribe to the locater and do something with the asynchronous stream of values you receive. The return type is `CLLocation` from the CoreLocation framework.
+3. Subscribe to the locater and do something with the asynchronous stream of values you receive. The return type is `CLLocation` from the CoreLocation framework.
 
     ```swift
     do {
@@ -50,7 +44,7 @@ The Swift Package Manager is a tool for managing the distribution of Swift code 
 	}
 	```
 
-5. Unsubscribe from the locater.
+4. Unsubscribe from the locater.
 
 	```swift
 	manager.unsubscribeFromLocater()

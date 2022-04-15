@@ -10,25 +10,25 @@
 import CoreLocation
 
 @available(iOS 13, macCatalyst 15, macOS 10.5, watchOS 6, *)
-final class LocationManagerDelegate: NSObject {
-	var authorizationContinuation: CheckedContinuation<AuthorizationStatus, Never>? = nil
+internal final class LocationManagerDelegate: NSObject {
+	internal var authorizationContinuation: CheckedContinuation<AuthorizationStatus, Never>? = nil
 	
-	var locatorUpdates: ([CLLocation]?, Error?) -> Void = { (_,_) in
+	internal var locatorUpdates: ([CLLocation]?, Error?) -> Void = { (_,_) in
 		return
 	}
 }
 
 @available(iOS 13, macCatalyst 15, macOS 10.5, watchOS 6, *)
 extension LocationManagerDelegate: CLLocationManagerDelegate {
-	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+	internal func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
 		self.locatorUpdates(nil, error)
 	}
 	
-	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+	internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 		self.locatorUpdates(locations, nil)
 	}
 	
-	func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+	internal func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
 		let status: CLAuthorizationStatus = manager.authStatus
 		
 		self.authorizationContinuation?.resume(returning: status.clone)

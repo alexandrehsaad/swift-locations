@@ -10,7 +10,7 @@
 import CoreLocation
 
 extension CLLocationManager {
-	var authStatus: CLAuthorizationStatus {
+	internal var authStatus: CLAuthorizationStatus {
 		if #available(iOS 14, macOS 11, watchOS 7, *) {
 			return self.authorizationStatus
 		} else {

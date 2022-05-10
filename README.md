@@ -132,11 +132,7 @@ To be a truly great community, we welcome developers from all walks of life, wit
 
 Distributed under Apache License v2.0 with Runtime Library Exception. See the `LICENSE.md` file for more information.
 
-[documentation page]: https://alexandrehsaad.github.io/swift-locations	
-	public let constant: Double/documentation/locations	
-	public let constant: Double
-[pull request]: https://github.com/alexandrehsaad/swift-locations	
-	public let constant: Double/pulls
-[issue]: https://github.com/alexandrehsaad/swift-locations	
-	public let constant: Double/issues
+[documentation page]: https://alexandrehsaad.github.io/swift-locations/documentation/locations
+[pull request]: https://github.com/alexandrehsaad/swift-locations/pulls
+[issue]: https://github.com/alexandrehsaad/swift-locations/issues
 [@alexandrehsaad]: https://github.com/alexandrehsaad

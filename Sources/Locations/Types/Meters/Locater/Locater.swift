@@ -1,4 +1,4 @@
-// LocationManager.swift
+// Locater.swift
 // Locations
 //
 // Copyright © 2022 Alexandre H. Saad
@@ -11,7 +11,7 @@ import CoreLocation
 
 /// A representation of the location manager.
 @available(iOS 13, macCatalyst 15, macOS 10.5, watchOS 6, *)
-public final class LocationManager {
+public final class Locater {
 	/// The underlying location manager from Apple's CoreLocation framework.
 	private let locationManager: CLLocationManager = .init()
 	
@@ -30,17 +30,17 @@ public final class LocationManager {
 	/// - parameter accuracy: The desired accuracy.
 	public convenience init(accuracy: LocationAccuracy) {
 		self.init()
-		self.locationManager.desiredAccuracy = accuracy.clone
+		self.locationManager.desiredAccuracy = .init(accuracy)
 	}
 	
 	deinit {
-		self.unsubscribeFromLocater()
+		self.unsubscribe()
 	}
 	
 	// MARK: - Checking Availabilities
 	
 	/// A boolean value indicating whether the locater is available.
-	public var isLocaterAvailable: Bool {
+	public var isAvailable: Bool {
 		return CLLocationManager.locationServicesEnabled()
 	}
 	
@@ -48,7 +48,7 @@ public final class LocationManager {
 	
 	/// The app’s authorization status for using location services.
 	public var authorizationStatus: AuthorizationStatus {
-		return self.locationManager.authStatus.clone
+		return .init(self.locationManager.authStatus)
 	}
 	
 	/// A boolean value indicating whether the user has authorized to share his location.
@@ -102,7 +102,7 @@ public final class LocationManager {
 	
 	/// A boolean value indicating whether the locater is active.
 	@available(*, unavailable)
-	public var isLocaterActive: Bool {
+	public var isActive: Bool {
 		fatalError()
 	}
 	
@@ -111,8 +111,8 @@ public final class LocationManager {
 	/// - throws: A service not available error.
 	/// - throws: A service not authorized error.
 	/// - returns: An asynchronous stream of data from the locater.
-	public func subscribeToLocater() throws -> AsyncStream<CLLocation> {
-		guard self.isLocaterAvailable else {
+	public func subscribe() throws -> AsyncStream<CLLocation> {
+		guard self.isAvailable else {
 			throw ServiceError.notAvailable
 		}
 		
@@ -161,8 +161,8 @@ public final class LocationManager {
 	/// - throws: A service not available error.
 	/// - throws: A service not authorized error.
 	/// - returns: An asynchronous stream of data from the locater.
-	public func subscribeToLocater() throws -> AsyncStream<Point> {
-		guard self.isLocaterAvailable else {
+	public func subscribe() throws -> AsyncStream<Point> {
+		guard self.isAvailable else {
 			throw ServiceError.notAvailable
 		}
 		
@@ -214,7 +214,7 @@ public final class LocationManager {
 	// MARK: - Unsubscribing from Streams
 	
 	/// Unsubscribes from the locater.
-	public func unsubscribeFromLocater() {
+	public func unsubscribe() {
 		self.locationManager.stopUpdatingLocation()
 	}
 }

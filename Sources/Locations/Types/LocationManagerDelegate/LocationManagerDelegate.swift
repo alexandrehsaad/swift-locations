@@ -29,9 +29,9 @@ extension LocationManagerDelegate: CLLocationManagerDelegate {
 	}
 	
 	internal func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-		let status: CLAuthorizationStatus = manager.authStatus
+		let status: AuthorizationStatus = .init(manager.authStatus)
 		
-		self.authorizationContinuation?.resume(returning: status.clone)
+		self.authorizationContinuation?.resume(returning: status)
 	}
 }
 

@@ -54,17 +54,17 @@ The Swift Package Manager is a tool for managing the distribution of Swift code 
 
 ## Demonstration
 
-1. Initiate the manager with your desired accuracy.
+1. Initiate the locater with your desired accuracy.
 
     ```swift
-    let manager: LocationManager = .init(accuracy: .tenMetres)
+    let locater: Locater = .init(accuracy: .tenMetres)
     ```
 
 2. Request the user’s permission to use location services and do something with the asynchronous value you receive. You can not show to the user an authorization dialog twice, but you can show the steps to change the permission from Settings.
 
     ```swift
     do {
-        let status: AuthorizationStatus = try await manager.requestAlwaysAuthorization()
+        let status: AuthorizationStatus = try await locater.requestAlwaysAuthorization()
 		// Do something with the status.
         print(status)
     } catch let error {
@@ -73,11 +73,11 @@ The Swift Package Manager is a tool for managing the distribution of Swift code 
     }
     ```
 
-3. Subscribe to the locater and do something with the asynchronous stream of values you receive. The return type is `CLLocation` from the CoreLocation framework.
+3. Subscribe to the locater and do something with the asynchronous stream of values you receive. The return type is `Point`, which conforms to a new protocol `PlottableInTwoDimensions`.
 
     ```swift
     do {
-        let stream: AsyncStream<CLLocation> = try manager.subscribeToLocater()
+        let stream: AsyncStream<CLLocation> = try locater.subscribe()
         for await data in stream {
             // Do something with the data.
             print(data)
@@ -91,7 +91,7 @@ The Swift Package Manager is a tool for managing the distribution of Swift code 
 4. Unsubscribe from the locater.
 
     ```swift
-    manager.unsubscribeFromLocater()
+    locater.unsubscribe()
     ```
 
 ### Troubleshooting common errors

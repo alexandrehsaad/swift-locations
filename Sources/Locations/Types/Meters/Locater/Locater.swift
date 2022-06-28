@@ -217,6 +217,18 @@ public final class Locater {
 	public func unsubscribe() {
 		self.locationManager.stopUpdatingLocation()
 	}
+	
+	// MARK: - Updating Accuracy
+	
+	/// The accuracy at which to deliver locater data.
+	public var accuracy: LocationAccuracy {
+		return .init(self.locationManager.desiredAccuracy)
+	}
+	
+	/// Updates the locater accuracy.
+	public func update(to accuracy: LocationAccuracy) {
+		self.locationManager.desiredAccuracy = .init(accuracy)
+	}
 }
 
 #endif

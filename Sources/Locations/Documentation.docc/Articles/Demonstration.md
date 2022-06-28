@@ -29,11 +29,11 @@ The Swift Package Manager is a tool for managing the distribution of Swift code 
 	}
 	```
 
-3. Subscribe to the locater and do something with the asynchronous stream of values you receive. The return type is `CLLocation` from the CoreLocation framework.
+3. Subscribe to the locater and do something with the asynchronous stream of values you receive. The return type is `Point` representing location, and conforming to a new protocol `PlottableInTwoDimensions`.
 
     ```swift
     do {
-        let stream: AsyncStream<CLLocation> = try manager.subscribeToLocater()
+        let stream: AsyncStream<Point> = try manager.subscribeToLocater()
         for await data in stream {
             // Do something with the data.
             print(data)

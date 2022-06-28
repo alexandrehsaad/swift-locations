@@ -15,10 +15,17 @@ let package: Package = .init(
 		.library(name: "Locations", targets: ["Locations"])
 	],
 	dependencies: [
+		.package(url: "https://github.com/alexandrehsaad/swift-points.git", branch: "main"),
 		.package(url: "https://github.com/apple/swift-docc-plugin.git", .upToNextMinor(from: "1.0.0"))
 	],
 	targets: [
-		.target(name: "Locations", path: "Sources"),
+		.target(
+			name: "Locations",
+			dependencies: [
+				.product(name: "Points", package: "swift-points")
+			],
+			path: "Sources"
+		),
 	],
 	swiftLanguageVersions: [.v5]
 )

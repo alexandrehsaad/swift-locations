@@ -8,6 +8,24 @@
         "revision" : "3303b164430d9a7055ba484c8ead67a52f7b74f6",
         "version" : "1.0.0"
       }
+    },
+    {
+      "identity" : "swift-numeric-protocols",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/alexandrehsaad/swift-numeric-protocols.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "fb170d7b9b2c665e85069c29e62e397f2b093c22"
+      }
+    },
+    {
+      "identity" : "swift-points",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/alexandrehsaad/swift-points.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "fa2b2c4ad38d038e48fcd8ca77919233e940121e"
+      }
     }
   ],
   "version" : 2

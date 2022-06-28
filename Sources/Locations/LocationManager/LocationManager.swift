@@ -129,12 +129,67 @@ public final class LocationManager {
 					return
 				}
 				
-				guard let locations: [CLLocation] = data else {
+				guard let data: [CLLocation] = data else {
 					continuation.finish()
 					return
 				}
 				
-				for location in locations {
+				for location in data {
+					continuation.yield(location)
+				}
+			}
+			
+			self.locationManager.startUpdatingLocation()
+			
+			continuation.onTermination = { @Sendable (termination) in
+				switch termination {
+				case .cancelled:
+					print("Locater stream was cancelled.")
+				case .finished:
+					print("Locater stream was finished.")
+				@unknown default:
+					fatalError()
+				}
+				
+				self.locationManager.stopUpdatingLocation()
+			}
+		}
+	}
+	
+	/// Subscribes to the locater.
+	///
+	/// - throws: A service not available error.
+	/// - throws: A service not authorized error.
+	/// - returns: An asynchronous stream of data from the locater.
+	public func subscribeToLocater() throws -> AsyncStream<Point> {
+		guard self.isLocaterAvailable else {
+			throw ServiceError.notAvailable
+		}
+		
+		guard self.isAuthorizedToLocate else {
+			throw ServiceError.notAuthorized
+		}
+		
+		return AsyncStream { (continuation) in
+			self.locationManagerDelegate.locatorUpdates = { (data, error) in
+				// FIXME: better handle errors from the callback
+				if let error = error {
+					print(error.localizedDescription)
+					continuation.finish()
+					return
+				}
+				
+				guard let data: [CLLocation] = data else {
+					continuation.finish()
+					return
+				}
+				
+				for location in data {
+					let location: Point = .init(
+						x: location.coordinate.longitude,
+						y: location.coordinate.latitude
+					)
+					
 					continuation.yield(location)
 				}
 			}

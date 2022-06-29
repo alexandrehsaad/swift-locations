@@ -10,7 +10,7 @@
 import CoreLocation
 
 extension AuthorizationStatus {
-	/// Creates a new instance with the specified location accuracy.
+	/// Creates a new instance with the specified authorization status.
 	///
 	/// - parameter status: The authorization status.
 	internal init(_ status: CLAuthorizationStatus) {

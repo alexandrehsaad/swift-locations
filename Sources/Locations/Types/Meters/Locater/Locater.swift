@@ -9,7 +9,7 @@
 
 import CoreLocation
 
-/// A representation of the location manager.
+/// A representation of the locater.
 @available(iOS 13, macCatalyst 15, macOS 10.5, watchOS 6, *)
 public final class Locater {
 	/// The underlying location manager from Apple's CoreLocation framework.

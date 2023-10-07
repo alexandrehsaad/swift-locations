@@ -32,6 +32,7 @@ extension LocationManagerDelegate: CLLocationManagerDelegate {
 		let status: AuthorizationStatus = .init(manager.authStatus)
 		
 		self.authorizationContinuation?.resume(returning: status)
+		self.authorizationContinuation = nil
 	}
 }
 
